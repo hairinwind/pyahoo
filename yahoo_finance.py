@@ -17,10 +17,14 @@ def parse(ticker):
 	summary_table = parser.xpath('//div[contains(@data-test,"summary-table")]//tr')
 	summary_data = OrderedDict()
 
-	# with open("quote.html", "w", encoding='utf-8') as text_file:
-	# 	text_file.write(response.text)
+	with open("quote.html", "w", encoding='utf-8') as text_file:
+		text_file.write(response.text)
 
-	lastPrice = parser.xpath("//span[@data-reactid=14]/text()")
+	lastPrice = parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=14]/text()")
+	afterHourPrice = parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()")
+	afterHourPriceDiff = parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()")
+
+	# print(afterHourPrice, afterHourPriceDiff)
 
 	try:
 		for table_data in summary_table:
@@ -29,8 +33,9 @@ def parse(ticker):
 			table_key = ''.join(raw_table_key).strip()
 			table_value = ''.join(raw_table_value).strip()
 			summary_data.update({table_key:table_value})
-		summary_data.update({'price':lastPrice, 'ticker':ticker, 'time': datetime.now()})
+		summary_data.update({'price':lastPrice, 'ticker':ticker, 'time': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}) 
 		# summary_data.update({'1y Target Est':y_Target_Est,'EPS (TTM)':eps,'Earnings Date':earnings_date,'ticker':ticker,'url':url})
+		# print('summary_data', summary_data)
 		return summary_data
 	except:
 		print ("Failed to parse json response")

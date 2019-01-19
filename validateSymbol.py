@@ -7,11 +7,6 @@ import threading
 import pandas as pd
 import os
 
-def collectQuotes(symbols): 
-    for symbol in symbols: 
-        # start new thread to coolect Quote
-        threading.Thread(target=getAndSaveQuote, args=[symbol]).start()
-
 def getAndSaveQuote(symbol):
     print(symbol+'  ', datetime.utcnow())
     quote = parse(symbol)
@@ -25,8 +20,8 @@ def getAndSaveQuote(symbol):
 
 def run():
     symbols = readSymbolsFromFile()
-    jobFunc = partial(collectQuotes, symbols)
-    startJob(jobFunc)
+    for symbol in symbols:
+        getAndSaveQuote(symbol)
 
 if __name__=="__main__":
 	run()

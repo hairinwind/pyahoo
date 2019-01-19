@@ -3,7 +3,7 @@ import numpy as np
 def readSymbolsFromFile():
     print('- read symbols from symbol.txt')
     symbols = np.loadtxt('symbol.txt', dtype='str')
-    return symbols
+    return np.unique(symbols)
 
 if __name__=="__main__":
     symbols = readSymbolsFromFile()
