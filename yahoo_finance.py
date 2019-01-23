@@ -6,6 +6,9 @@ import argparse
 from collections import OrderedDict
 from time import sleep
 from datetime import datetime
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def parse(ticker, retry=10):
 	response = sendQuoteRequest(ticker, retry)
