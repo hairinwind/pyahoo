@@ -7,5 +7,7 @@ python main.py
 nohup python3 main.py
 
 ## todo list 
+- write file synchronizely
+- collect all threads and join at last
 - stop collecting quote if it is weekend
 - 

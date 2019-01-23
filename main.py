@@ -6,7 +6,10 @@ from yahoo_finance import parse
 import threading
 import pandas as pd
 import os
+import json
+from util.fileManager import runFuncSynchronized
 
+# threads = []
 def collectQuotes(symbols): 
     for symbol in symbols: 
         # start new thread to coolect Quote
@@ -15,13 +18,14 @@ def collectQuotes(symbols):
 def getAndSaveQuote(symbol):
     print(symbol+'  ', datetime.utcnow())
     quote = parse(symbol)
-    df = pd.DataFrame(quote, columns=quote.keys())
     # save
     date = datetime.now().strftime('%Y%m%d')
-    fileName = 'quotes/'+symbol + '_' + date+ '.csv'
-    needHeader = not (os.path.isfile(fileName) and os.path.getsize(fileName) > 0)
+    fileName = 'quotes/'+symbol + '_' + date+ '.json'
+    runFuncSynchronized(saveQuote, quote, fileName)
+
+def saveQuote(data, fileName):
     with open(fileName, 'a') as f:
-        df.to_csv(f, header=needHeader)
+        f.write(json.dumps(data) + '\n')
 
 def run():
     symbols = readSymbolsFromFile()
@@ -30,3 +34,5 @@ def run():
 
 if __name__=="__main__":
 	run()
+    # for t in threads:
+    #     t.join()

@@ -33,7 +33,7 @@ def runJob(jobFunc):
     # if now >= todayOpen and now <= todayEnd:
     global count 
     count = count + 1
-    if count <= 300:
+    if count <= 10:
         print('count', count)
         jobFunc()
 
