@@ -6,22 +6,20 @@ from yahoo_finance import parse
 import threading
 import pandas as pd
 import os
+import urllib3
 
-def getAndSaveQuote(symbol):
-    print(symbol+'  ', datetime.utcnow())
+
+def validateQuote(symbol):
+#     print(symbol+'  ', datetime.utcnow())
     quote = parse(symbol)
-    df = pd.DataFrame(quote, columns=quote.keys())
-    # save
-    date = datetime.now().strftime('%Y%m%d')
-    fileName = 'quotes/'+symbol + '_' + date+ '.csv'
-    needHeader = not (os.path.isfile(fileName) and os.path.getsize(fileName) > 0)
-    with open(fileName, 'a') as f:
-        df.to_csv(f, header=needHeader)
+    if not quote['price']:
+        print(symbol) 
 
 def run():
     symbols = readSymbolsFromFile()
     for symbol in symbols:
-        getAndSaveQuote(symbol)
+        validateQuote(symbol)
 
 if __name__=="__main__":
-	run()
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    run()
