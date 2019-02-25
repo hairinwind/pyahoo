@@ -68,9 +68,9 @@ def find_crumb_store(lines):
 def get_page_data(symbol):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
-    print("quote URL:", url)
+    # print("quote URL:", url)
     r = requests.get(url, headers=headers)
-    print(r.cookies.get_dict(domain='.yahoo.com'))
+    # print(r.cookies.get_dict(domain='.yahoo.com'))
     cookie = get_cookie_value(r)
     # lines = r.text.encode('utf-8').strip().replace('}', '\n')
     lines = r.content.strip().decode("utf-8").replace('}', '\n')

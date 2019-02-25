@@ -15,26 +15,17 @@ def startJob(jobFunc):
     nextCollectTime = getNextCollectTime()
     print('-- next collect time is ', nextCollectTime)
     timeDelta = (nextCollectTime - utcNow()).seconds
-    # xxxxxxxxxxxxx
-    timeDelta = 2
 
     # start thread 
     threading.Timer(timeDelta, runJob, [jobFunc]).start()
     print('-- new thread is started to run the job')
 
-count = 0
 def runJob(jobFunc):
-    # xxxxxxxxxxxxxxxxx
     threading.Timer(30, runJob, [jobFunc]).start()
     now = utcNow()
     todayOpen = now.replace(hour=marketOpenHour, minute=marketOpenMinute, second=0, microsecond=0)
     todayEnd = now.replace(hour=marketCloseHour, minute=marketCloseMinute, second=0, microsecond=0)
-    # xxxxxxxxxxxxxxxxxxx
-    # if now >= todayOpen and now <= todayEnd:
-    global count 
-    count = count + 1
-    if count <= 10:
-        print('count', count)
+    if now >= todayOpen and now <= todayEnd:
         jobFunc()
 
 def getNextCollectTime(): 
