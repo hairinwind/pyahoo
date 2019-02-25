@@ -21,7 +21,7 @@ def startJob(jobFunc):
     print('-- new thread is started to run the job')
 
 def runJob(jobFunc):
-    threading.Timer(30, runJob, [jobFunc]).start()
+    threading.Timer(300, runJob, [jobFunc]).start()
     now = utcNow()
     todayOpen = now.replace(hour=marketOpenHour, minute=marketOpenMinute, second=0, microsecond=0)
     todayEnd = now.replace(hour=marketCloseHour, minute=marketCloseMinute, second=0, microsecond=0)
