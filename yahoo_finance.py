@@ -29,7 +29,7 @@ def parseResponse(ticker, response):
 	# with open("quote.html", "w", encoding='utf-8') as text_file:
 	# 	text_file.write(response.text)
 
-	lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=14]/text()"))
+	lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=34]/text()"))
 	afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
 	afterHourPriceDiff = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()"))
 
