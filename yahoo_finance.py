@@ -1,11 +1,14 @@
-from lxml import html  
-import requests
-from time import sleep
-import json
-import argparse
+from bs4 import BeautifulSoup
 from collections import OrderedDict
-from time import sleep
 from datetime import datetime
+from lxml import html  
+from time import sleep
+import argparse
+import json
+import re
+import requests
+import urllib3
+urllib3.disable_warnings()
 
 def parse(ticker, retry=10):
 	response = sendQuoteRequest(ticker, retry)
@@ -25,9 +28,10 @@ def parseResponse(ticker, response):
 	# with open("quote.html", "w", encoding='utf-8') as text_file:
 	# 	text_file.write(response.text)
 
-	lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=14]/text()"))
-	afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
-	afterHourPriceDiff = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()"))
+	# lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=14]/text()"))
+	# afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
+	# afterHourPriceDiff = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()"))
+	lastPrice, afterHourPrice, afterHourPriceDiff = getPrice(ticker, response)
 
 	try:
 		for table_data in summary_table:
@@ -45,6 +49,26 @@ def parseResponse(ticker, response):
 	except Exception as e:
 		print ("Failed to parse json response", e)
 		return {"error":"Failed to parse json response"}
+
+def getPrice(ticker, response): 
+	soup = BeautifulSoup(response.text, 'html5lib')
+	scriptsFound = soup.body.find_all('script')
+	appMainScripts = [x.text for x in scriptsFound if x.string is not None and 'root.App.main' in x.text]
+	regex = r"root.App.main.*;"
+	matches = re.search(regex, appMainScripts[0])
+	appMainText = matches.group(0)
+	# appMainText is root.App.main = {...json...}; I only need the json part
+	appMainText1 = appMainText[appMainText.index('{'):]
+	if appMainText1.endswith(';'):
+		appMainText1 = appMainText1[:len(appMainText1)-1]
+	
+	appMain = json.loads(appMainText1)
+	priceSection =  appMain['context']['dispatcher']['stores']['QuoteSummaryStore']['price']
+	lastPrice = float(priceSection['regularMarketPrice']['fmt'])
+	afterHourPrice = float(priceSection['postMarketPrice']['fmt']) if priceSection['postMarketPrice'] else None
+	afterHourPriceDiff = float(priceSection['postMarketChange']['fmt']) if priceSection['postMarketChange'] else None
+
+	return lastPrice, afterHourPrice, afterHourPriceDiff
 
 def sendQuoteRequest(ticker, retry): 
 	for i in range(retry):
@@ -67,6 +91,7 @@ if __name__=="__main__":
 	ticker = args.ticker
 	print ("Fetching data for %s"%(ticker))
 	scraped_data = parse(ticker)
+	print(scraped_data)
 	# print ("Writing data to output file")
 	# with open('%s-summary.json'%(ticker),'w') as fp:
 	# 	json.dump(scraped_data,fp,indent = 4)

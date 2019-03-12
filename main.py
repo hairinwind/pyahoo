@@ -1,13 +1,14 @@
-from symbol import readSymbolsFromFile
-from jobManager import startJob
 from datetime import datetime
 from functools import partial
+from jobManager import startJob
+from pemail import gmail 
+from symbol import readSymbolsFromFile
+from util.fileManager import runFuncSynchronized
 from yahoo_finance import parse
-import threading
+import json
 import pandas as pd
 import os
-import json
-from util.fileManager import runFuncSynchronized
+import threading
 
 # threads = []
 def collectQuotes(symbols): 
@@ -32,7 +33,20 @@ def run():
     jobFunc = partial(collectQuotes, symbols)
     startJob(jobFunc)
 
+def emailJob():
+    date = datetime.now().strftime('%Y%m%d')
+    files = os.listdir('quotes')
+    files = [file for file in files if date in file]
+    gmail.send_email_text('rbcFund','', filename=files)
+
+def emailFiles():
+    print('emailFiles is running...')
+    scheduler = BlockingScheduler()
+	scheduler.add_job(emailJob, 'cron', day_of_week='1-5', hour=23, minute=0)
+	scheduler.start()
+
 if __name__=="__main__":
 	run()
+    emailFiles() 
     # for t in threads:
     #     t.join()
