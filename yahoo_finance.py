@@ -31,17 +31,11 @@ def parseResponse(ticker, response):
 
 	# with open("quote.html", "w", encoding='utf-8') as text_file:
 	# 	text_file.write(response.text)
-
-<<<<<<< HEAD
+	
 	# lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=14]/text()"))
 	# afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
 	# afterHourPriceDiff = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()"))
 	lastPrice, afterHourPrice, afterHourPriceDiff = getPrice(ticker, response)
-=======
-	lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=34]/text()"))
-	afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
-	afterHourPriceDiff = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()"))
->>>>>>> 2a3f433814619f426f1b40131dcdb5a6bd7d4046
 
 	try:
 		for table_data in summary_table:
@@ -60,7 +54,6 @@ def parseResponse(ticker, response):
 		print ("Failed to parse json response", e)
 		return {"error":"Failed to parse json response"}
 
-<<<<<<< HEAD
 def getPrice(ticker, response): 
 	soup = BeautifulSoup(response.text, 'html5lib')
 	scriptsFound = soup.body.find_all('script')
@@ -80,43 +73,6 @@ def getPrice(ticker, response):
 	afterHourPriceDiff = float(priceSection['postMarketChange']['fmt']) if priceSection['postMarketChange'] else None
 
 	return lastPrice, afterHourPrice, afterHourPriceDiff
-=======
-def get_cookie_value(r):
-    # return {'B': r.cookies['B']}
-    return r.cookies.get_dict(domain='.yahoo.com')
-
-def split_crumb_store(v):
-    return v.split(':')[2].strip('"')
-
-def find_crumb_store(lines):
-    # Looking for
-    # ,"CrumbStore":{"crumb":"9q.A4D1c.b9
-    for l in lines:
-        if re.findall(r'CrumbStore', l):
-            return l
-    print("Did not find CrumbStore")
-
-def get_page_data(symbol):
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-    url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
-    # print("quote URL:", url)
-    r = requests.get(url, headers=headers)
-    # print(r.cookies.get_dict(domain='.yahoo.com'))
-    cookie = get_cookie_value(r)
-    # lines = r.text.encode('utf-8').strip().replace('}', '\n')
-    lines = r.content.strip().decode("utf-8").replace('}', '\n')
-    return cookie, lines.split('\n')
-
-
-def get_cookie_crumb(symbol):
-    cookie, lines = get_page_data(symbol)
-    crumb = split_crumb_store(find_crumb_store(lines))
-    # Note: possible \u002F value
-    # ,"CrumbStore":{"crumb":"FWP\u002F5EFll3U"
-    # FWP\u002F5EFll3U
-    # crumb2 = crumb.decode('unicode-escape')
-    return cookie, crumb
->>>>>>> 2a3f433814619f426f1b40131dcdb5a6bd7d4046
 
 def sendQuoteRequest(ticker, retry): 
 	cookie, crumb = get_cookie_crumb(ticker)

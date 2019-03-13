@@ -1,3 +1,4 @@
+from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 from functools import partial
 from jobManager import startJob
@@ -42,11 +43,9 @@ def emailJob():
 def emailFiles():
     print('emailFiles is running...')
     scheduler = BlockingScheduler()
-	scheduler.add_job(emailJob, 'cron', day_of_week='1-5', hour=23, minute=0)
-	scheduler.start()
+    scheduler.add_job(emailJob, 'cron', day_of_week='1-5', hour=23, minute=0)
+    scheduler.start()
 
 if __name__=="__main__":
-	run()
-    emailFiles() 
-    # for t in threads:
-    #     t.join()
+    run()
+    emailFiles()
