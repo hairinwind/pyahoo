@@ -17,7 +17,7 @@ def collectQuotes(symbols):
         threading.Thread(target=getAndSaveQuote, args=[symbol]).start()
 
 def getAndSaveQuote(symbol):
-    print(symbol+'  ', datetime.utcnow())
+#     print(symbol+'  ', datetime.utcnow())
     quote = parse(symbol)
     # save
     date = datetime.now().strftime('%Y%m%d')
