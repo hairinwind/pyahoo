@@ -1,10 +1,8 @@
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 from datetime import datetime
-from lxml import html  
-from time import sleep
-from collections import OrderedDict
-from datetime import datetime
+from lxml import html 
+from os import environ
 from time import sleep
 import argparse
 import json
@@ -12,7 +10,8 @@ import re
 import requests
 import urllib3
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+if environ.get('PYTHON_ENV') != 'prod':
+	urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def parse(ticker, retry=10):
 	response = sendQuoteRequest(ticker, retry)
@@ -75,17 +74,13 @@ def getPrice(ticker, response):
 	return lastPrice, afterHourPrice, afterHourPriceDiff
 
 def sendQuoteRequest(ticker, retry): 
-	cookie, crumb = get_cookie_crumb(ticker)
 	for i in range(retry):
-		url = "http://finance.yahoo.com/quote/%s?p=%s&crumb=%s" % (ticker,ticker,crumb)
-		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-		response = requests.get(url, headers=headers, cookies=cookie, verify=False)
+		url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
+		response = requests.get(url, verify=False)
 		# print ("Parsing %s"%(url))
 		sleep(4)
 		if response.status_code == 200:
 			return response
-		else: 
-			print(ticker, response.status_code)
 	print('retry time', i)
 	return None
 
