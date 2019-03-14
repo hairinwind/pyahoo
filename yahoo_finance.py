@@ -67,9 +67,9 @@ def getPrice(ticker, response):
 	
 	appMain = json.loads(appMainText1)
 	priceSection =  appMain['context']['dispatcher']['stores']['QuoteSummaryStore']['price']
-	lastPrice = float(priceSection['regularMarketPrice']['fmt'])
-	afterHourPrice = float(priceSection['postMarketPrice']['fmt']) if priceSection['postMarketPrice'] else None
-	afterHourPriceDiff = float(priceSection['postMarketChange']['fmt']) if priceSection['postMarketChange'] else None
+	lastPrice = float(priceSection['regularMarketPrice']['fmt'].replace(',',''))
+	afterHourPrice = float(priceSection['postMarketPrice']['fmt'].replace(',','')) if priceSection['postMarketPrice'] else None
+	afterHourPriceDiff = float(priceSection['postMarketChange']['fmt'].replace(',','')) if priceSection['postMarketChange'] else None
 
 	return lastPrice, afterHourPrice, afterHourPriceDiff
 
