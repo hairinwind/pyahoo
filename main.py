@@ -2,7 +2,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 from functools import partial
 from jobManager import startJob
-from pemail import gmail 
+from pemail import gmailapi 
 from symbol import readSymbolsFromFile
 from util.fileManager import runFuncSynchronized
 from yahoo_finance import parse
@@ -38,7 +38,7 @@ def emailJob():
     date = datetime.now().strftime('%Y%m%d')
     files = os.listdir('quotes')
     files = [file for file in files if date in file]
-    gmail.send_email_text('rbcFund','', filename=files)
+    gmailapi.send('stock 5 minutes','', filename=files)
 
 def emailFiles():
     print('emailFiles is running...')
