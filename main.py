@@ -37,8 +37,9 @@ def run():
 def emailJob():
     date = datetime.now().strftime('%Y%m%d')
     files = os.listdir('quotes')
-    files = [file for file in files if date in file]
-    gmailapi.send('stock 5 minutes','', filename=files)
+    files = ['quotes/'+file for file in files if date in file]
+    print('going to email', files)
+    gmailapi.send('stock 5 minutes','', files=files)
 
 def emailFiles():
     print('emailFiles is running...')
