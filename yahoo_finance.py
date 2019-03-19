@@ -28,8 +28,10 @@ def parseResponse(ticker, response):
 	summary_table = parser.xpath('//div[contains(@data-test,"summary-table")]//tr')
 	summary_data = OrderedDict()
 
-	# with open("quote.html", "w", encoding='utf-8') as text_file:
-	# 	text_file.write(response.text)
+	if datetime.now().hour == 8:
+		nowStr = datetime.now().strftime("%Y%m%d%H%M")
+		with open(ticker + "_" +nowStr+ ".html", "w", encoding='utf-8') as text_file:
+			text_file.write(response.text)
 	
 	# lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=14]/text()"))
 	# afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
