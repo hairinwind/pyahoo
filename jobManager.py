@@ -2,9 +2,10 @@ import datetime
 import threading
 from functools import partial
 
-marketOpenHour = 14
-marketOpenMinute = 25
-marketCloseHour = 21 
+# use EST or EDT
+marketOpenHour = 4
+marketOpenMinute = 00
+marketCloseHour = 20 
 marketCloseMinute = 30
 
 
@@ -14,7 +15,7 @@ marketCloseMinute = 30
 def startJob(jobFunc):
     nextCollectTime = getNextCollectTime()
     print('-- next collect time is ', nextCollectTime)
-    timeDelta = (nextCollectTime - utcNow()).seconds
+    timeDelta = (nextCollectTime - current()).seconds
 
     # start thread 
     threading.Timer(timeDelta, runJob, [jobFunc]).start()
@@ -22,20 +23,20 @@ def startJob(jobFunc):
 
 def runJob(jobFunc):
     threading.Timer(300, runJob, [jobFunc]).start()
-    now = utcNow()
+    now = current()
     todayOpen = now.replace(hour=marketOpenHour, minute=marketOpenMinute, second=0, microsecond=0)
     todayEnd = now.replace(hour=marketCloseHour, minute=marketCloseMinute, second=0, microsecond=0)
     if now >= todayOpen and now <= todayEnd:
         jobFunc()
 
 def getNextCollectTime(): 
-    now = utcNow()
+    now = current()
     next5min = now + datetime.timedelta(minutes=5)
     minute = next5min.minute // 5 * 5
     return next5min.replace(minute=minute, second=0, microsecond=0)
 
-def utcNow():
-    return datetime.datetime.utcnow()
+def current():
+    return datetime.datetime.now()
 
 
 if __name__=="__main__":

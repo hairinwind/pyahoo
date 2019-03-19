@@ -1,14 +1,16 @@
-from lxml import html  
-import requests
-from time import sleep
-import json
-import argparse
+from bs4 import BeautifulSoup
 from collections import OrderedDict
-from time import sleep
 from datetime import datetime
-import urllib3
+from lxml import html 
+from os import environ
+from time import sleep
+import argparse
+import json
 import re
+import requests
+import urllib3
 
+# if environ.get('PYTHON_ENV') != 'prod':
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def parse(ticker, retry=10):
@@ -26,12 +28,15 @@ def parseResponse(ticker, response):
 	summary_table = parser.xpath('//div[contains(@data-test,"summary-table")]//tr')
 	summary_data = OrderedDict()
 
-	# with open("quote.html", "w", encoding='utf-8') as text_file:
-	# 	text_file.write(response.text)
-
-	lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=34]/text()"))
-	afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
-	afterHourPriceDiff = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()"))
+	if datetime.now().hour == 8:
+		nowStr = datetime.now().strftime("%Y%m%d%H%M")
+		with open(ticker + "_" +nowStr+ ".html", "w", encoding='utf-8') as text_file:
+			text_file.write(response.text)
+	
+	# lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=14]/text()"))
+	# afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
+	# afterHourPriceDiff = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()"))
+	lastPrice, afterHourPrice, afterHourPriceDiff = getPrice(ticker, response)
 
 	try:
 		for table_data in summary_table:
@@ -50,54 +55,34 @@ def parseResponse(ticker, response):
 		print ("Failed to parse json response", e)
 		return {"error":"Failed to parse json response"}
 
-def get_cookie_value(r):
-    # return {'B': r.cookies['B']}
-    return r.cookies.get_dict(domain='.yahoo.com')
+def getPrice(ticker, response): 
+	soup = BeautifulSoup(response.text, 'html5lib')
+	scriptsFound = soup.body.find_all('script')
+	appMainScripts = [x.text for x in scriptsFound if x.string is not None and 'root.App.main' in x.text]
+	regex = r"root.App.main.*;"
+	matches = re.search(regex, appMainScripts[0])
+	appMainText = matches.group(0)
+	# appMainText is root.App.main = {...json...}; I only need the json part
+	appMainText1 = appMainText[appMainText.index('{'):]
+	if appMainText1.endswith(';'):
+		appMainText1 = appMainText1[:len(appMainText1)-1]
+	
+	appMain = json.loads(appMainText1)
+	priceSection =  appMain['context']['dispatcher']['stores']['QuoteSummaryStore']['price']
+	lastPrice = float(priceSection['regularMarketPrice']['fmt'].replace(',',''))
+	afterHourPrice = float(priceSection['postMarketPrice']['fmt'].replace(',','')) if priceSection['postMarketPrice'] else None
+	afterHourPriceDiff = float(priceSection['postMarketChange']['fmt'].replace(',','')) if priceSection['postMarketChange'] else None
 
-def split_crumb_store(v):
-    return v.split(':')[2].strip('"')
-
-def find_crumb_store(lines):
-    # Looking for
-    # ,"CrumbStore":{"crumb":"9q.A4D1c.b9
-    for l in lines:
-        if re.findall(r'CrumbStore', l):
-            return l
-    print("Did not find CrumbStore")
-
-def get_page_data(symbol):
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-    url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
-    # print("quote URL:", url)
-    r = requests.get(url, headers=headers)
-    # print(r.cookies.get_dict(domain='.yahoo.com'))
-    cookie = get_cookie_value(r)
-    # lines = r.text.encode('utf-8').strip().replace('}', '\n')
-    lines = r.content.strip().decode("utf-8").replace('}', '\n')
-    return cookie, lines.split('\n')
-
-
-def get_cookie_crumb(symbol):
-    cookie, lines = get_page_data(symbol)
-    crumb = split_crumb_store(find_crumb_store(lines))
-    # Note: possible \u002F value
-    # ,"CrumbStore":{"crumb":"FWP\u002F5EFll3U"
-    # FWP\u002F5EFll3U
-    # crumb2 = crumb.decode('unicode-escape')
-    return cookie, crumb
+	return lastPrice, afterHourPrice, afterHourPriceDiff
 
 def sendQuoteRequest(ticker, retry): 
-	cookie, crumb = get_cookie_crumb(ticker)
 	for i in range(retry):
-		url = "http://finance.yahoo.com/quote/%s?p=%s&crumb=%s" % (ticker,ticker,crumb)
-		headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-		response = requests.get(url, headers=headers, cookies=cookie, verify=False)
+		url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
+		response = requests.get(url, verify=False)
 		# print ("Parsing %s"%(url))
 		sleep(4)
 		if response.status_code == 200:
 			return response
-		else: 
-			print(ticker, response.status_code)
 	print('retry time', i)
 	return None
 
@@ -111,6 +96,7 @@ if __name__=="__main__":
 	ticker = args.ticker
 	print ("Fetching data for %s"%(ticker))
 	scraped_data = parse(ticker)
+	print(scraped_data)
 	# print ("Writing data to output file")
 	# with open('%s-summary.json'%(ticker),'w') as fp:
 	# 	json.dump(scraped_data,fp,indent = 4)
