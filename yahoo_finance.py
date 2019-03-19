@@ -10,8 +10,8 @@ import re
 import requests
 import urllib3
 
-if environ.get('PYTHON_ENV') != 'prod':
-	urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+# if environ.get('PYTHON_ENV') != 'prod':
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def parse(ticker, retry=10):
 	response = sendQuoteRequest(ticker, retry)
