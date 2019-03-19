@@ -4,7 +4,7 @@
 python main.py
 
 ## run it on ubuntu backend
-nohup python3 main.py
+nohup python3 main.py &
 
 ## todo list 
 - write file synchronizely
