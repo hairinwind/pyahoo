@@ -1,10 +1,10 @@
 from datetime import datetime
 
 # use EST or EDT
-preMarketStart = current().replace(hour=4, minute=0, second=0, microsecond=0)
-marketOpen = current().replace(hour=9, minute=30, second=0, microsecond=0)
-marketClose = current().replace(hour=16, minute=0, second=0, microsecond=0)
-postMarketEnd = current().replace(hour=20, minute=30, second=0, microsecond=0)
+preMarketStart = datetime.now().replace(hour=4, minute=0, second=0, microsecond=0)
+marketOpen = datetime.now().replace(hour=9, minute=30, second=0, microsecond=0)
+marketClose = datetime.now().replace(hour=16, minute=0, second=0, microsecond=0)
+postMarketEnd = datetime.now().replace(hour=20, minute=30, second=0, microsecond=0)
 
 def current():
     return datetime.now()
