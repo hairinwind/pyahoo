@@ -4,6 +4,7 @@ from datetime import datetime
 from lxml import html 
 from os import environ
 from time import sleep
+from util import dateUtil
 import argparse
 import json
 import re
@@ -28,15 +29,15 @@ def parseResponse(ticker, response):
 	summary_table = parser.xpath('//div[contains(@data-test,"summary-table")]//tr')
 	summary_data = OrderedDict()
 
-	if datetime.now().hour == 8:
-		nowStr = datetime.now().strftime("%Y%m%d%H%M")
-		with open(ticker + "_" +nowStr+ ".html", "w", encoding='utf-8') as text_file:
-			text_file.write(response.text)
+	# if datetime.now().hour == 8:
+	# 	nowStr = datetime.now().strftime("%Y%m%d%H%M")
+	# 	with open(ticker + "_" +nowStr+ ".html", "w", encoding='utf-8') as text_file:
+	# 		text_file.write(response.text)
 	
 	# lastPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=14]/text()"))
 	# afterHourPrice = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=20]/text()"))
 	# afterHourPriceDiff = getFirstItem(parser.xpath("//div[@id='quote-header-info']//span[@data-reactid=23]/text()"))
-	lastPrice, afterHourPrice, afterHourPriceDiff = getPrice(ticker, response)
+	lastPrice, afterHourPrice, afterHourPriceDiff, afterHourPercent, beforeHourPrice, beforeHourPriceDiff, beforeHourPercent = getPrice(ticker, response)
 
 	try:
 		for table_data in summary_table:
@@ -44,10 +45,12 @@ def parseResponse(ticker, response):
 			raw_table_value = table_data.xpath('.//td[contains(@class,"Ta(end)")]//text()')
 			table_key = ''.join(raw_table_key).strip()
 			table_value = ''.join(raw_table_value).strip()
+			summary_data.update({'ticker':ticker, 'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'price':lastPrice})
+			if dateUtil.isPreMarket():
+				summary_data.update({'beforeHourPrice':beforeHourPrice, 'beforeHourPriceDiff':beforeHourPriceDiff, 'beforeHourPercent': beforeHourPercent})
+			if dateUtil.isPostMarket(): 
+				summary_data.update({'afterHourPrice':afterHourPrice, 'afterHourPriceDiff':afterHourPriceDiff, 'afterHourPercent': afterHourPercent})
 			summary_data.update({table_key:table_value})
-		summary_data.update({'price':lastPrice, 'ticker':ticker, 'time': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
-								'afterHourPrice':afterHourPrice, 'afterHourPriceDiff':afterHourPriceDiff
-		}) 
 		# summary_data.update({'1y Target Est':y_Target_Est,'EPS (TTM)':eps,'Earnings Date':earnings_date,'ticker':ticker,'url':url})
 		# print('summary_data', summary_data)
 		return summary_data
@@ -72,8 +75,12 @@ def getPrice(ticker, response):
 	lastPrice = float(priceSection['regularMarketPrice']['fmt'].replace(',',''))
 	afterHourPrice = float(priceSection['postMarketPrice']['fmt'].replace(',','')) if priceSection['postMarketPrice'] else None
 	afterHourPriceDiff = float(priceSection['postMarketChange']['fmt'].replace(',','')) if priceSection['postMarketChange'] else None
+	afterHourPercent = priceSection['postMarketChangePercent']['fmt']
+	beforeHourPrice = float(priceSection['preMarketPrice']['fmt'].replace(',','')) if priceSection['postMarketPrice'] else None
+	beforeHourPriceDiff = float(priceSection['preMarketChange']['fmt'].replace(',','')) if priceSection['postMarketChange'] else None
+	beforeHourPercent = priceSection['preMarketChangePercent']['fmt']
 
-	return lastPrice, afterHourPrice, afterHourPriceDiff
+	return lastPrice, afterHourPrice, afterHourPriceDiff, afterHourPercent, beforeHourPrice, beforeHourPriceDiff, beforeHourPercent
 
 def sendQuoteRequest(ticker, retry): 
 	for i in range(retry):
