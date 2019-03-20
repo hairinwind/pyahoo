@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # use EST or EDT
 preMarketStart = datetime.now().replace(hour=4, minute=0, second=0, microsecond=0)
@@ -11,7 +11,7 @@ def current():
 
 def getNextCollectTime(): 
     now = current()
-    next5min = now + datetime.timedelta(minutes=5)
+    next5min = now + timedelta(minutes=5)
     minute = next5min.minute // 5 * 5
     return next5min.replace(minute=minute, second=0, microsecond=0)
 
