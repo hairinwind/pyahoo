@@ -1,6 +1,6 @@
 import threading
 from functools import partial
-from util import dateUtil
+from util import dateUtil, envUtil
 
 ###
 # this is the method to determine when it shall collect the quote 
@@ -15,11 +15,14 @@ def startJob(jobFunc):
     # print('-- new thread is started to run the job')
 
 def runJob(jobFunc):
-    threading.Timer(300, runJob, [jobFunc]).start()
+    intervals = 300
+    if envUtil.isDev():
+        intervals = 30
+    threading.Timer(intervals, runJob, [jobFunc]).start()
     print('current', dateUtil.current())
     print('beforeEndTime', dateUtil.beforeEndTime())
     print('afterStartTime', dateUtil.afterStartTime())
-    print('')
+    print('wait...', intervals)
     if dateUtil.beforeEndTime() and dateUtil.afterStartTime():
         jobFunc()
 

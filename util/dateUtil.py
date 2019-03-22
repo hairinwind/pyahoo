@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from util import envUtil
 
 # use EST or EDT
 preMarketStart = datetime.now().replace(hour=4, minute=0, second=0, microsecond=0)
@@ -9,7 +10,9 @@ postMarketEnd = datetime.now().replace(hour=20, minute=30, second=0, microsecond
 def current():
     return datetime.now()
 
-def getNextCollectTime(): 
+def getNextCollectTime():
+    if envUtil.isDev():
+        return current() + timedelta(seconds=5)
     now = current()
     next5min = now + timedelta(minutes=5)
     minute = next5min.minute // 5 * 5
