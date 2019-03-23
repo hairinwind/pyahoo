@@ -4,7 +4,10 @@
 python main.py
 
 ## run it on ubuntu backend
-nohup python3 main.py &
+It is now pipenv enabled  
+```
+python -m pipenv run  nohup python3 main.py &
+```
 
 ## todo list 
 - write file synchronizely

@@ -10,6 +10,7 @@ import json
 import re
 import requests
 import urllib3
+import sys
 
 # if environ.get('PYTHON_ENV') != 'prod':
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -75,12 +76,12 @@ def getPrice(ticker, response):
     lastPrice = float(priceSection['regularMarketPrice']['fmt'].replace(',',''))
     afterHourPrice = float(priceSection['postMarketPrice']['fmt'].replace(',','')) if priceSection['postMarketPrice'] else None
     afterHourPriceDiff = float(priceSection['postMarketChange']['fmt'].replace(',','')) if priceSection['postMarketChange'] else None
-    # afterHourPercent = priceSection['postMarketChangePercent']['fmt']  if priceSection['postMarketChangePercent'] else None
-    beforeHourPrice = float(priceSection['preMarketPrice']['fmt'].replace(',','')) if priceSection['postMarketPrice'] else None
-    beforeHourPriceDiff = float(priceSection['preMarketChange']['fmt'].replace(',','')) if priceSection['postMarketChange'] else None
-    # beforeHourPercent = priceSection['preMarketChangePercent']['fmt'] if priceSection['preMarketChangePercent'] else None
+    afterHourPercent = priceSection['postMarketChangePercent']['fmt'] if priceSection.get('postMarketChangePercent', None) else None
+    beforeHourPrice = float(priceSection['preMarketPrice']['fmt'].replace(',','')) if priceSection['preMarketPrice'] else None
+    beforeHourPriceDiff = float(priceSection['preMarketChange']['fmt'].replace(',','')) if priceSection['preMarketChange'] else None
+    beforeHourPercent = priceSection['preMarketChangePercent']['fmt'] if priceSection.get('preMarketChangePercent', None) else None
 
-    return lastPrice, afterHourPrice, afterHourPriceDiff, None, beforeHourPrice, beforeHourPriceDiff, None
+    return lastPrice, afterHourPrice, afterHourPriceDiff, afterHourPercent, beforeHourPrice, beforeHourPriceDiff, beforeHourPercent
 
 def sendQuoteRequest(ticker, retry): 
     for i in range(retry):
@@ -95,6 +96,13 @@ def sendQuoteRequest(ticker, retry):
 
 def getFirstItem(list):
     return next(iter(list), None)
+
+def test():
+    from symbol import readSymbolsFromFile
+    symbols = readSymbolsFromFile()
+    for symbol in symbols:
+        parse(symbol, retry=1)
+        print('collect quote for %s' % symbol)
         
 if __name__=="__main__":
     argparser = argparse.ArgumentParser()
@@ -104,6 +112,9 @@ if __name__=="__main__":
     print ("Fetching data for %s"%(ticker))
     scraped_data = parse(ticker)
     print(scraped_data)
+
     # print ("Writing data to output file")
     # with open('%s-summary.json'%(ticker),'w') as fp:
     #     json.dump(scraped_data,fp,indent = 4)
+
+    # test()
