@@ -1,3 +1,7 @@
+^DJI
+^NYA
+^GSPC
+^IXIC 
 FAZ
 FAS
 BAC
