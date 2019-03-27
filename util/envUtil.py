@@ -1,5 +1,5 @@
 from os import environ
 
 def isDev():
-    print(environ.get('PYAHOO_ENV'))
+    print('PYAHOO_ENV', environ.get('PYAHOO_ENV'))
     return environ.get('PYAHOO_ENV') == 'dev'
