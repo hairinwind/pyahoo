@@ -40,10 +40,8 @@ def parseResponse(ticker, response):
     appMain = json.loads(appMainText1)    
     priceSection =  appMain['context']['dispatcher']['stores']['QuoteSummaryStore']['price']
     summary = appMain['context']['dispatcher']['stores']['QuoteSummaryStore']['summaryDetail']
-    # summary.update({'regularMarketChange': priceSection.get('regularMarketChange', None)})
-    # summary.update({'regularMarketPrice': priceSection.get('regularMarketPrice', None)})
-    # summary.update({'regularMarketChangePercent': priceSection.get('regularMarketChangePercent', None)})
-    # summary.update({'regularMarketTime': priceSection.get('regularMarketTime', None)})
+    nowStr = datetime.now().strftime("%Y%m%d%H%M")
+    summary.update({'symbol': ticker, 'currentTime': nowStr})
     
     summary = summaryUpdate(summary, priceSection, 
         ['regularMarketChange', 'regularMarketPrice', 'regularMarketChangePercent', 'regularMarketTime',
