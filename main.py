@@ -33,8 +33,10 @@ def run():
     symbols = readSymbolsFromFile()
     jobFunc = partial(collectQuotes, symbols)
     startJob(jobFunc)
+    emailFiles()
 
 def emailJob():
+    print('emailJob is running...')
     date = datetime.now().strftime('%Y%m%d')
     files = os.listdir('quotes')
     files = ['quotes/'+file for file in files if date in file]
@@ -42,11 +44,10 @@ def emailJob():
     gmailapi.send('stock 5 minutes','', files=files)
 
 def emailFiles():
-    print('emailFiles is running...')
+    print('email task is scheduled...')
     scheduler = BlockingScheduler()
-    scheduler.add_job(emailJob, 'cron', day_of_week='1-5', hour=23, minute=0)
+    scheduler.add_job(emailJob, 'cron', day_of_week='1-5', hour=21, minute=30)
     scheduler.start()
 
 if __name__=="__main__":
     run()
-    emailFiles()
