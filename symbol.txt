@@ -2,6 +2,7 @@
 ^NYA
 ^GSPC
 ^IXIC 
+^VIX
 FAZ
 FAS
 BAC
