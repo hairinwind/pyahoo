@@ -39,10 +39,11 @@ def parseResponse(ticker, response):
     
     appMain = json.loads(appMainText1)    
     priceSection =  appMain['context']['dispatcher']['stores']['QuoteSummaryStore']['price']
-    summary = appMain['context']['dispatcher']['stores']['QuoteSummaryStore']['summaryDetail']
-    nowStr = datetime.now().strftime("%Y%m%d%H%M")
-    summary.update({'symbol': ticker, 'currentTime': nowStr})
-    
+    nowStr = datetime.now().strftime("%Y-%m-%d %H:%M")
+    summary = OrderedDict()
+    summary.update({'symbol': ticker, 'currentTime': nowStr})   
+    summary.update(appMain['context']['dispatcher']['stores']['QuoteSummaryStore']['summaryDetail'])
+
     summary = summaryUpdate(summary, priceSection, 
         ['regularMarketChange', 'regularMarketPrice', 'regularMarketChangePercent', 'regularMarketTime',
         'postMarketTime', 'postMarketPrice', 'postMarketChange', 'preMarketChangePercent',
