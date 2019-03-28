@@ -8,3 +8,5 @@ quotes/*.csv
 pyvenv.cfg
 
 quote.html
+credentials.json
+token.pickle

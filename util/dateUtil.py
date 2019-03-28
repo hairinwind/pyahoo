@@ -19,9 +19,13 @@ def getNextCollectTime():
     return next5min.replace(minute=minute, second=0, microsecond=0)
 
 def beforeEndTime():
+    if envUtil.isDev():
+        return True
     return current() <= postMarketEnd
     
 def afterStartTime():
+    if envUtil.isDev():
+        return True
     return current() >= preMarketStart
 
 def isPreMarket():

@@ -1,12 +1,13 @@
 from bs4 import BeautifulSoup
 from collections import OrderedDict
-from datetime import datetime
-# from lxml import html 
+from datetime import datetime 
 from os import environ
 from time import sleep
-from util import dateUtil
+from util import dateUtil, envUtil
+from util.logger import logger
 import argparse
 import json
+import random
 import re
 import requests
 import urllib3
@@ -18,9 +19,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def parse(ticker, retry=10):
     response = sendQuoteRequest(ticker, retry)
     if response == None:
-        print()
-        print('did not get quote', ticker, datetime.utcnow())
-        print()
+        logger.error('did not get quote %s' % ticker)
         return None
     else: 
         return parseResponse(ticker, response)
@@ -117,14 +116,21 @@ def summaryUpdate(summary, priceSection, priceSectionProps):
 
 def sendQuoteRequest(ticker, retry): 
     for i in range(retry):
+        randomWait = getRandomWaitTime()
+        sleep(randomWait)
         url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
         response = requests.get(url, verify=False)
         # print ("Parsing %s"%(url))
         sleep(4)
         if response.status_code == 200:
             return response
-    print('retry time', i)
+    logger.info('retry time', i)
     return None
+
+def getRandomWaitTime():
+    if envUtil.isDev(): 
+        return 0
+    return round(random.uniform(0.001, 60), 2)
 
 def getFirstItem(list):
     return next(iter(list), None)

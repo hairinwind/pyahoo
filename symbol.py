@@ -1,20 +1,21 @@
 from os import environ
+from util.logger import logger
 import numpy as np
 
+symbolDir = 'config/'
+
 def getSymbolFileName():
-    print('read env variable:', 'PYAHOO_SYMBOL_FILE')
     if environ.get('PYAHOO_SYMBOL_FILE'):
         return environ.get('PYAHOO_SYMBOL_FILE')
     else:
         return 'symbol.txt'
 
 def readSymbolsFromFile():
-    symbolFileName = getSymbolFileName()
-    print('- read symbols from %s' % symbolFileName)
+    symbolFileName = symbolDir + getSymbolFileName()
     symbols = np.loadtxt(symbolFileName, dtype='str')
     return np.unique(symbols)
 
 if __name__=="__main__":
     symbols = readSymbolsFromFile()
-    print(symbols)
-    print(symbols[0])
+    logger.info(symbols)
+    logger.info(symbols[0])
