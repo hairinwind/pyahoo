@@ -5,7 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 logger = logging.getLogger()
 
 def initLogger(path='log/pyahoo.log'):
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     # format the log entries
     formatter = logging.Formatter('%(asctime)s %(levelname)s [%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s')
  
