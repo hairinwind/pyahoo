@@ -9,8 +9,9 @@ from util.logger import initLogger, logger
 from util import envUtil
 from yahoo_finance import parse
 import json
-import pandas as pd
 import os
+import pandas as pd
+import random
 import threading
 
 # threads = []
@@ -38,6 +39,8 @@ def run():
     emailFiles()
 
 def emailJob():
+    randomWait = random.randInt(0, 600)
+    sleep(randomWait)
     logger.debug('emailJob is running...')
     date = datetime.now().strftime('%Y%m%d')
     files = os.listdir('quotes')
