@@ -39,7 +39,7 @@ def run():
     emailFiles()
 
 def emailJob():
-    randomWait = random.randInt(0, 600)
+    randomWait = random.randint(0, 600)
     sleep(randomWait)
     logger.debug('emailJob is running...')
     date = datetime.now().strftime('%Y%m%d')
