@@ -1,14 +1,22 @@
 from datetime import datetime, timedelta
+from pytz import timezone
 from util import envUtil
 
 # use EST or EDT
-preMarketStart = datetime.now().replace(hour=4, minute=0, second=0, microsecond=0)
-marketOpen = datetime.now().replace(hour=9, minute=30, second=0, microsecond=0)
-marketClose = datetime.now().replace(hour=16, minute=0, second=0, microsecond=0)
-postMarketEnd = datetime.now().replace(hour=20, minute=30, second=0, microsecond=0)
+def getPreMarketStart(): 
+    return current().replace(hour=4, minute=0, second=0, microsecond=0)
+
+def getMarketOpen(): 
+    return current().replace(hour=9, minute=30, second=0, microsecond=0)
+
+def getMarketClose():
+    return current().replace(hour=16, minute=0, second=0, microsecond=0)
+
+def getPostMarketEnd():
+    return current().replace(hour=20, minute=30, second=0, microsecond=0)
 
 def current():
-    return datetime.now()
+    return datetime.now().astimezone(timezone('America/Toronto'))
 
 def getNextCollectTime():
     if envUtil.isDev():
@@ -21,17 +29,17 @@ def getNextCollectTime():
 def beforeEndTime():
     if envUtil.isDev():
         return True
-    return current() <= postMarketEnd
+    return current() <= getPostMarketEnd()
     
 def afterStartTime():
     if envUtil.isDev():
         return True
-    return current() >= preMarketStart
+    return current() >= getPreMarketStart()
 
 def isPreMarket():
     now = current()
-    return preMarketStart <= now < marketOpen
+    return getPreMarketStart() <= now < getMarketOpen()
 
 def isPostMarket():
     now = current()
-    return marketClose < now <= postMarketEnd
+    return getMarketClose() < now <= getPostMarketEnd()
