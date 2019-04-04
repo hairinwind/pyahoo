@@ -36,7 +36,7 @@ def run():
     symbols = readSymbolsFromFile()
     jobFunc = partial(collectQuotes, symbols)
     startJob(jobFunc)
-    # emailFiles()
+    emailFiles()
 
 def emailJob():
     randomWait = random.randint(0, 600)
