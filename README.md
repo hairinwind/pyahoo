@@ -9,6 +9,10 @@ It is now pipenv enabled
 python -m pipenv run  nohup python3 main.py &
 ```
 
+## symbol file env var
+export PYAHOO_SYMBOL_FILE=symbol.1.txt
+export PYAHOO_SYMBOL_FILE=symbol.sp500.txt
+
 ## todo list 
 - write file synchronizely
 - collect all threads and join at last
