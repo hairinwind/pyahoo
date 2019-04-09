@@ -1,5 +1,4 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
-from datetime import datetime
 from functools import partial
 from jobManager import startJob
 from pemail import gmailapi 
@@ -7,7 +6,7 @@ from symbol import getSymbolFileName, readSymbolsFromFile
 from time import sleep
 from util.fileManager import runFuncSynchronized
 from util.logger import initLogger, logger
-from util import envUtil
+from util import dateUtil, envUtil
 from yahoo_finance import parse
 import json
 import os
@@ -24,7 +23,7 @@ def collectQuotes(symbols):
 def getAndSaveQuote(symbol):
     quote = parse(symbol)
     # save
-    date = datetime.now().strftime('%Y%m%d')
+    date = dateUtil.current().strftime('%Y%m%d')
     fileName = 'quotes/'+symbol + '_' + date+ '.json'
     runFuncSynchronized(saveQuote, quote, fileName)
 
@@ -43,7 +42,7 @@ def emailJob():
     randomWait = random.randint(0, 600)
     sleep(randomWait)
     logger.debug('emailJob is running...')
-    date = datetime.now().strftime('%Y%m%d')
+    date = dateUtil.current().strftime('%Y%m%d')
     files = os.listdir('quotes')
     files = ['quotes/'+file for file in files if date in file]
     logger.debug('going to send email', files)
