@@ -4,9 +4,10 @@ lib
 include
 bin
 Scripts
-quotes/*.csv
+quotes/
 pyvenv.cfg
 
 quote.html
 credentials.json
 token.pickle
+nohup.out
