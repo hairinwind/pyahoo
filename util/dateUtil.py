@@ -29,12 +29,12 @@ def getNextCollectTime():
 def beforeEndTime():
     if envUtil.isDev():
         return True
-    return current() <= getPostMarketEnd()
+    return isWeekday(current()) and current() <= getPostMarketEnd()
     
 def afterStartTime():
     if envUtil.isDev():
         return True
-    return current() >= getPreMarketStart()
+    return isWeekday(current()) and current() >= getPreMarketStart()
 
 def isPreMarket():
     now = current()
@@ -43,3 +43,6 @@ def isPreMarket():
 def isPostMarket():
     now = current()
     return getMarketClose() < now <= getPostMarketEnd()
+
+def isWeekday(date):
+    return date.weekday() < 5
