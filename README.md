@@ -11,7 +11,8 @@ python -m pipenv run  nohup python3 main.py &
 
 ## symbol file env var
 export PYAHOO_SYMBOL_FILE=symbol.1.txt
-export PYAHOO_SYMBOL_FILE=symbol.sp500.txt
+export PYAHOO_SYMBOL_FILE=symbol.top.txt
+export PYAHOO_SYMBOL_FILE=symbol.top2.txt
 
 ## todo list 
 - write file synchronizely
