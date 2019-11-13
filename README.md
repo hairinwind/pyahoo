@@ -20,4 +20,7 @@ export PYAHOO_SYMBOL_FILE=symbol.top2.txt
 - stop collecting quote if it is weekend
 
 ## Docker command 
-docker run -v /root/pyahoo/quotes:/opt/pyahoo/quotes -v /root/pyahoo/log:/opt/pyahoo/log --env PYAHOO_SYMBOL_FILE=symbol.top.txt --name=pyahoo pyahoo:latest
+```
+docker run -v /root/pyahoo/quotes:/opt/pyahoo/quotes -v /root/pyahoo/log:/opt/pyahoo/log -v /root/pyahoo/config:/opt/pyahoo/config --env PYAHOO_SYMBOL_FILE=symbol.top.txt --name=pyahoo pyahoo:latest
+```
+/root/pyahoo is the directory on my cloudcost

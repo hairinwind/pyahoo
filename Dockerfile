@@ -5,9 +5,6 @@ WORKDIR /opt/pyahoo/
 COPY *.py ./
 COPY Pip* ./
 COPY README.md ./
-COPY config/ config/
-# COPY log/ log/ 
-# COPY quotes/ quotes/
 COPY util/ util/
 
 RUN pip install pipenv
