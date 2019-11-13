@@ -18,4 +18,6 @@ export PYAHOO_SYMBOL_FILE=symbol.top2.txt
 - write file synchronizely
 - collect all threads and join at last
 - stop collecting quote if it is weekend
-- 
+
+## Docker command 
+docker run -v /root/pyahoo/quotes:/opt/pyahoo/quotes -v /root/pyahoo/log:/opt/pyahoo/log --env PYAHOO_SYMBOL_FILE=symbol.top.txt --name=pyahoo pyahoo:latest
