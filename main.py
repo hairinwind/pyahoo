@@ -15,7 +15,8 @@ import random
 import threading
 
 # threads = []
-def collectQuotes(symbols): 
+def collectQuotes():
+    symbols = readSymbolsFromFile() 
     for symbol in symbols: 
         # start new thread to coolect Quote
         threading.Thread(target=getAndSaveQuote, args=[symbol]).start()
@@ -33,9 +34,9 @@ def saveQuote(data, fileName):
 
 def run():
     printEnv()
-    symbols = readSymbolsFromFile()
-    jobFunc = partial(collectQuotes, symbols)
-    startJob(jobFunc)
+    # symbols = readSymbolsFromFile()
+    # jobFunc = partial(collectQuotes, symbols)
+    startJob(collectQuotes)
     # emailFiles()
 
 def emailJob():
