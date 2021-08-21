@@ -6,6 +6,7 @@ bin
 Scripts
 quotes/
 pyvenv.cfg
+.pytest_cache/
 
 quote.html
 credentials.json
