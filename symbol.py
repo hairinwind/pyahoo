@@ -13,16 +13,16 @@ def getSymbolFileName():
 
 def readSymbolsFromFile():
     symbol_file_name = getSymbolFileName()
-    if symbol_file_name.startswith('http'):
-        # read file from remote
-        symbol_text = requests.get(symbol_file_name).content.decode("utf-8")
-        symbols = symbol_text.splitlines()
-        symbols = np.unique(symbols)
-        return symbols
-    else:
-        symbolFileName = symbolDir + symbol_file_name
-        symbols = np.loadtxt(symbolFileName, dtype='str')
-        return np.unique(symbols)
+    # read symbol from git
+    if not symbol_file_name:
+        symbol_file_name = "symbol.txt"
+    baseUrl = 'https://raw.githubusercontent.com/hairinwind/pyahoo/master/config/'
+    url = baseUrl + symbol_file_name
+    logger.info("symbol_file:", url)
+    symbol_text = requests.get(url).content.decode("utf-8")
+    symbols = symbol_text.splitlines()
+    symbols = np.unique(symbols)
+    return symbols
 
 if __name__=="__main__":
     symbols = readSymbolsFromFile()
