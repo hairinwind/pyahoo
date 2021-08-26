@@ -9,10 +9,12 @@ It is now pipenv enabled
 python -m pipenv run  nohup python3 main.py &
 ```
 
+## .bash_profile auto run it after reboot
+add this in .bash_profile
+```cd pyahoo/ && python3 -m pipenv run  nohup python3 main.py &```
+
 ## symbol file env var
 export PYAHOO_SYMBOL_FILE=symbol.1.txt
-export PYAHOO_SYMBOL_FILE=symbol.top.txt
-export PYAHOO_SYMBOL_FILE=symbol.top2.txt
 
 ## todo list 
 - write file synchronizely
@@ -34,4 +36,14 @@ docker run -d -v /root/pyahoo/quotes:/opt/pyahoo/quotes -v /root/pyahoo/log:/opt
 the command to look into the image
 ```
 docker exec -it pyahoo bash
+```
+
+the command to login docker hub
+```
+docker login
+```
+
+the command to push docker image 
+```
+docker push...
 ```
