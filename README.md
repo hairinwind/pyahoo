@@ -35,3 +35,18 @@ the command to look into the image
 ```
 docker exec -it pyahoo bash
 ```
+
+the command to login dockerhub
+```
+docker login
+```
+
+the command to tag
+```
+docker tag pyahoo hairinwind/pyahoo:latest
+```
+
+the command to push
+```
+docker push hairinwind/pyahoo:latest
+```
