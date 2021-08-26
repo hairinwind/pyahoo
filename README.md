@@ -43,7 +43,12 @@ the command to login docker hub
 docker login
 ```
 
-the command to push docker image 
+the command to tag
 ```
-docker push...
+docker tag pyahoo hairinwind/pyahoo:latest
+```
+
+the command to push
+```
+docker push hairinwind/pyahoo:latest
 ```
