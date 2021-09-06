@@ -1,5 +1,6 @@
 from os import environ
 from util.logger import logger
+import datetime
 import numpy as np
 import requests
 
@@ -22,6 +23,9 @@ def readSymbolsFromFile():
     symbol_text = requests.get(url).content.decode("utf-8")
     symbols = symbol_text.splitlines()
     symbols = np.unique(symbols)
+    now = datetime.datetime.now()
+    print("minute: " + now.minute)
+    print(symbols)
     return symbols
 
 if __name__=="__main__":
