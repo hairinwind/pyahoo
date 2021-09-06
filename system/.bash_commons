@@ -1,0 +1,5 @@
+# add the following line in .bash_profile
+# source ~/pyahoo/system/.bash_commons
+
+alias myps='ps -ef|grep python3'
+myps
