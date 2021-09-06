@@ -9,19 +9,15 @@ It is now pipenv enabled
 python -m pipenv run  nohup python3 main.py &
 ```
 
-## .bash_profile auto run it after reboot
-add this in .bash_profile
-```
-cd pyahoo/ && python3 -m pipenv run  nohup python3 main.py &
-```
+## .bash_profile 
+add "source ~/pyahoo/system/.bash_commons" in .bash_profile  
+any changes could be checked in https://github.com/hairinwind/pyahoo/blob/master/system/.bash_commons
+
+## auto run it after reboot
+A service was made, see https://github.com/hairinwind/pyahoo/blob/master/system/make_pyahoo_service
 
 ## symbol file env var
 export PYAHOO_SYMBOL_FILE=symbol.1.txt
-
-## todo list 
-- write file synchronizely
-- collect all threads and join at last
-- stop collecting quote if it is weekend
 
 ## Docker command 
 the command to build the image
