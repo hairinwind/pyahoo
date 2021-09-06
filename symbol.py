@@ -19,7 +19,7 @@ def readSymbolsFromFile():
         symbol_file_name = "symbol.txt"
     baseUrl = 'https://raw.githubusercontent.com/hairinwind/pyahoo/master/config/'
     url = baseUrl + symbol_file_name
-    logger.info("symbol_file:", url)
+    logger.info("symbol_file: " + url)
     symbol_text = requests.get(url).content.decode("utf-8")
     symbols = symbol_text.splitlines()
     symbols = np.unique(symbols)
