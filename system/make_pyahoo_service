@@ -1,4 +1,13 @@
+envsubst '${PYAHOO_SYMBOL_FILE}' <pyahoo.services
 cp pyahoo.service /etc/systemd/system/
 chmod 664 /etc/systemd/system/pyahoo.service
 systemctl start pyahoo
+
+# systemctl daemon-reexec
+# Warning: pyahoo.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+# systemctl --type=service |grep pyahoo
+
+systemctl enable pyahoo
 systemctl status pyahoo
+
+ps -ef |grep python3
