@@ -1,0 +1,16 @@
+[Unit]
+Description=pyahoo
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -m pipenv run nohup python3 main.py
+WorkingDirectory=/root/pyahoo
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=%n
+
+[Install]
+WantedBy=multi-user.target

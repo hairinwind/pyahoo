@@ -1,0 +1,4 @@
+cp pyahoo.service /etc/systemd/system/
+chmod 664 /etc/systemd/system/pyahoo.service
+systemctl start pyahoo
+systemctl status pyahoo
