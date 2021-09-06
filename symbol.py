@@ -10,7 +10,7 @@ def getSymbolFileName():
     if environ.get('PYAHOO_SYMBOL_FILE'):
         return environ.get('PYAHOO_SYMBOL_FILE')
     else:
-        return 'symbol.txt'
+        return 'symbol_test.txt'
 
 def readSymbolsFromFile():
     symbol_file_name = getSymbolFileName()
@@ -24,7 +24,7 @@ def readSymbolsFromFile():
     symbols = symbol_text.splitlines()
     symbols = np.unique(symbols)
     now = datetime.datetime.now()
-    print("minute: " + now.minute)
+    print("minute: " + str(now.minute))
     print(symbols)
     return symbols
 

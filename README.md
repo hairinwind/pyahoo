@@ -11,7 +11,9 @@ python -m pipenv run  nohup python3 main.py &
 
 ## .bash_profile auto run it after reboot
 add this in .bash_profile
-```cd pyahoo/ && python3 -m pipenv run  nohup python3 main.py &```
+```
+cd pyahoo/ && python3 -m pipenv run  nohup python3 main.py &
+```
 
 ## symbol file env var
 export PYAHOO_SYMBOL_FILE=symbol.1.txt
@@ -52,3 +54,6 @@ the command to push
 ```
 docker push hairinwind/pyahoo:latest
 ```
+
+## upgrade pip 
+'pip install --upgrade pip'
