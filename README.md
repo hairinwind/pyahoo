@@ -17,7 +17,19 @@ any changes could be checked in https://github.com/hairinwind/pyahoo/blob/master
 A service was made, see https://github.com/hairinwind/pyahoo/blob/master/system/make_pyahoo_service
 
 ## symbol file env var
-export PYAHOO_SYMBOL_FILE=symbol.1.txt
+```export PYAHOO_SYMBOL_FILE=symbol.1.txt```
+this shall be replaced by ip mapping
+
+To get the ip
+```
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+print(s.getsockname()[0])
+```
+
+create an ip mapping file
+
 
 ## Docker command 
 the command to build the image
