@@ -1,4 +1,4 @@
-envsubst '${PYAHOO_SYMBOL_FILE}' <pyahoo.services
+envsubst '${PYAHOO_SYMBOL_FILE}' <pyahoo.service
 cp pyahoo.service /etc/systemd/system/
 chmod 664 /etc/systemd/system/pyahoo.service
 systemctl start pyahoo
