@@ -1,6 +1,6 @@
 ^DJI
 ^GSPC
-^IXIC 
+^IXIC
 ^NYA
 ^RUT
 ^TNX
