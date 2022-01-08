@@ -1,1 +1,8 @@
 DIA
+VTI
+IWM
+IEF
+VIXM 
+VXX
+DBO
+VGK
