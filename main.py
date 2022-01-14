@@ -68,6 +68,7 @@ def emailFiles():
 def printEnv():
     logger.info('PYAHOO_ENV: %s' % envUtil.getPyahooEnv())
     logger.info('symbol file name: %s' % getSymbolFileName())
+    logger.info('finnhub API key: %s' % API_KEY)
 
 if __name__=="__main__":
     if API_KEY is None:
