@@ -1,4 +1,5 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
+from datetime import datetime
 from functools import partial
 from jobManager import startJob
 from pemail import gmailapi 
@@ -7,26 +8,34 @@ from time import sleep
 from util.fileManager import runFuncSynchronized
 from util.logger import initLogger, logger
 from util import dateUtil, envUtil
-from yahoo_finance import parse
+# from yahoo_finance import parse
+from finnhub import parse
 import json
 import os
 import pandas as pd
 import random
 import threading
+import time
+
+API_KEY = 'c7ce9oqad3idhma69mog'
 
 # threads = []
 def collectQuotes():
     symbols = readSymbolsFromFile() 
-    for symbol in symbols: 
+    for index, symbol in enumerate(symbols): 
         # start new thread to coolect Quote
+        if int(index/60) == index / 60:
+            time.sleep(61)
         threading.Thread(target=getAndSaveQuote, args=[symbol]).start()
 
 def getAndSaveQuote(symbol):
-    quote = parse(symbol)
-    # save
-    date = dateUtil.current().strftime('%Y%m%d')
-    fileName = 'quotes/'+symbol + '_' + date+ '.json'
-    runFuncSynchronized(saveQuote, quote, fileName)
+    toTime = datetime.now() # (2022,1,13,13,0,0,0)
+    quote = parse(symbol, API_KEY, toTime)
+    if quote is not None:
+        # save
+        date = dateUtil.current().strftime('%Y%m%d')
+        fileName = 'quotes/'+symbol + '_' + date+ '.json'
+        runFuncSynchronized(saveQuote, quote, fileName)
 
 def saveQuote(data, fileName):
     with open(fileName, 'a') as f:
@@ -62,3 +71,4 @@ def printEnv():
 if __name__=="__main__":
     initLogger()
     run()
+    
