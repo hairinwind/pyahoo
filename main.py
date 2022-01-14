@@ -2,6 +2,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 from functools import partial
 from jobManager import startJob
+from os import environ
 from pemail import gmailapi 
 from symbol import getSymbolFileName, readSymbolsFromFile
 from time import sleep
@@ -17,7 +18,7 @@ import random
 import threading
 import time
 
-API_KEY = 'c7ce9oqad3idhma69mog'
+API_KEY = environ.get('FINNHUB_API_KEY')# 'c7ce9oqad3idhma69mog'
 
 # threads = []
 def collectQuotes():
@@ -69,6 +70,8 @@ def printEnv():
     logger.info('symbol file name: %s' % getSymbolFileName())
 
 if __name__=="__main__":
+    if API_KEY is None:
+        raise Exception('finnhub api key is not configured as env variable...')
     initLogger()
     run()
     
