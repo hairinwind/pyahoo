@@ -7,3 +7,13 @@ VXX
 DBO
 VGK
 UUP
+
+
+^DJI
+^GSPC
+^IXIC
+^NYA
+^RUT
+^TNX
+^VIX
+
