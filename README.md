@@ -1,12 +1,19 @@
 # pyahoo
 
+## setup linux machine
+- install git
+- git clone 
+- install python3 ``` yum install -y python3 ```
+- install pipenv ``` python3 -m pip install --user pipenv ```
+- goto pyahoo dir, run pipenv install ``` python3 -m pipenv install ```
+
 ## to run it 
 python main.py
 
 ## run it on ubuntu backend
 It is now pipenv enabled  
 ```
-python -m pipenv run  nohup python3 main.py &
+python3 -m pipenv run  nohup python3 main.py &
 ```
 
 ## .bash_profile 
