@@ -5,6 +5,7 @@ After=syslog.target network.target
 [Service]
 Type=simple
 Environment=PYAHOO_SYMBOL_FILE=${PYAHOO_SYMBOL_FILE}
+Environment=FINNHUB_API_KEY=${FINNHUB_API_KEY}
 ExecStart=/usr/bin/python3 -m pipenv run nohup python3 main.py
 WorkingDirectory=/root/pyahoo
 Restart=always

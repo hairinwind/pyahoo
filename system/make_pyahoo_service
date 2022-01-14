@@ -1,5 +1,6 @@
-envsubst '${PYAHOO_SYMBOL_FILE}' <pyahoo.service.template >pyahoo.service
-cp pyahoo.service /etc/systemd/system/
+rm -f pyahoo.service
+envsubst '${PYAHOO_SYMBOL_FILE} ${FINNHUB_API_KEY}' <pyahoo.service.template >pyahoo.service
+cp -nf pyahoo.service /etc/systemd/system/
 chmod 664 /etc/systemd/system/pyahoo.service
 systemctl start pyahoo
 
